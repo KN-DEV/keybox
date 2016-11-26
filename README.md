@@ -12,3 +12,5 @@ Elements used in project:
  - buzzer
  - electromagnetic lock
  - door status sensor(micro switch)
+ - LCM1602 - I2C converter for Display
+ - Display - JHD162A-YG
