@@ -23,7 +23,7 @@ struct CardUID {
 };
 
 
-extern MFRC522 mfrc522;  // Create MFRC522
+extern MFRC522 mfrc522;
 extern CardUID cardUID;
 
 const CardUID  MASTER_CARD = {4294948834, 13952};
@@ -32,27 +32,13 @@ const CardUID  RESET_CARD =  {9186, 13952};
 
 bool operator==(const CardUID& lhs, const CardUID& rhs);
 
-
-Card checkCard() ;
-
-
-
-
-/**
-   sprawdza czy zeskanowana karta jest kartą MASTER
-*/
+Card checkCard();
 bool isMasterCard(CardUID card);
-/**
-   sprawdza czy zeskanowana karta jest kartą RESET
-*/
+
 bool isResetCard(CardUID card) ;
-/**
-   sprawdza czy zeskanowana karta jest kartą LOCK
-*/
+
 bool isLockCard(CardUID card) ;
-/**
-   Sprawdza czy karta jest w pobliżu czytnika
-*/
+
 bool isThereAnyCardNearReader() ;
 
 bool isCardScaned();

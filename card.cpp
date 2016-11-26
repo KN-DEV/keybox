@@ -2,7 +2,7 @@
 #include "database.h"
 #include "noise.h"
 
-MFRC522 mfrc522(RFID_RC522_SDA_PIN, RFID_RC522_RST_PIN);  // Create MFRC522
+MFRC522 mfrc522(RFID_RC522_SDA_PIN, RFID_RC522_RST_PIN);
 CardUID cardUID;
 
 bool operator==(const CardUID& lhs, const CardUID& rhs) {

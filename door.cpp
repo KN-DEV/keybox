@@ -1,14 +1,9 @@
 #include "door.h"
-/**
-   sprawdza stan drzwi
-*/
+
 bool doorStatus() {
     return digitalRead(DOOR_PIN);
 };
 
-/**
-   sprawdza czy zeskanowana karta jest kartą RESET
-*/
 void unlockDoor() {
     digitalWrite(RELAY_PIN, LOW);
     delay(50);

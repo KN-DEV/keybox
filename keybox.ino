@@ -13,30 +13,9 @@
 
 
 
-// https://github.com/firebull/arduino-edb
+// 
 //
 // https://www.arduino.cc/en/Tutorial/ToneMelody?from=Tutorial.Tone
-
-
-
-// Do Zrobienia
-//------------------------------------------
-
-
-
-/**
-   Dodaje identyfikator zeskanowanej karty do listy zautoryzowanych kart
-*/
-
-
-
-/**
-   czyta kartę wybiera z niej UID i zapamiętuje do zmienniej
-   @TODO
-  http://stackoverflow.com/questions/2404439/how-do-i-bit-shift-a-long-by-more-
-  than-32-bits
-
-*/
 
 
 
