@@ -42,7 +42,12 @@ void makeNoise(State type) {
 
   switch (type) {
     case State::WAITING_FOR_CLOSE:
-playMelody(melody,noteDurations);
+      playMelody(melody,noteDurations);
+      break;
+  }
+  switch (type) {
+    case State::ERROR:
+      playMelody(melody,noteDurations);
       break;
   }
   
