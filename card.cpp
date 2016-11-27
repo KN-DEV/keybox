@@ -71,7 +71,7 @@ Card checkCard(CardUID card) {
     if (findCardInAuthorizedCards(card)) {
         return Card::AUTHORIZED;
     } else {
-        makeNoise((int) Noise::ACCESS_GRANTED);
+        makeNoise(State::ERROR);
         return Card::UNKNOWN;
     }
 };

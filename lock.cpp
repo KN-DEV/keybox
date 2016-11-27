@@ -1,7 +1,7 @@
 #include "lock.h"
 Button lockSensor(LOCK_SENSOR_PIN);
 bool isLockOpened() {
-    return lockSensor.pressed();
+    return lockSensor.read() == Button::PRESSED;
 };
 void unlockLock() {
     digitalWrite(LOCK_PIN, LOW);

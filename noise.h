@@ -3,12 +3,15 @@
 #include "Arduino.h"
 #include "config.h"
 #include "pitches.h"
+#include "state.h"
 
-enum class Noise {
-  ACCESS_GRANTED,
-  ACCESS_DENIED 
-};
-void makeNoise(int type);
-extern int melody[1][8];
-extern int noteDurations[1][8];
+void playMelody(int* tones, int* durations);
+void makeNoise(State type);
+extern int melody[];
+extern int noteDurations[];
+
+
+extern int WAITING_FOR_CLOSE_MELODY[]; 
+
+extern int WAITING_FOR_CLOSE_NOTE_DURATION[]; 
 #endif

@@ -5,7 +5,7 @@ void setupKeyHolder() {
   pinMode(KEYBOX_STATUS_PIN, OUTPUT);
 }
 bool isKeyOnHolder() {
-  return keyHolder.pressed();
+    return keyHolder.read() == Button::PRESSED;
 }
 void updateKeyBoxStatus() {
   digitalWrite(KEYBOX_STATUS_PIN, isKeyOnHolder());

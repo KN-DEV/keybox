@@ -16,9 +16,13 @@ void setup() {
   setupDatabase();
 };
 
+#define CONTROL_TIMEOUT 5000
+#define WAITING_FOR_CLOSE_TIMEOUT 10000
+unsigned long long  stoper = 0;
 void loop() {
+
   updateKeyBoxStatus();
-  
+
   switch (getState()) {
     case State::IDLE:
       if (!isCardScaned()) {
@@ -27,6 +31,7 @@ void loop() {
       switch (checkCard(cardUID)) {
         case Card::MASTER:
           setState(State::CONTROL);
+          stoper = millis();
           return;
         case Card::AUTHORIZED:
           setState(State::OPENING);
@@ -45,7 +50,6 @@ void loop() {
       if (!isCardScaned()) {
         return;
       }
-
       switch (checkCard(cardUID)) {
         case Card::RESET:
           setState(State::RESET);
@@ -56,9 +60,10 @@ void loop() {
         case Card::UNKNOWN:
           setState(State::ADD_CARD);
           return;
-        case Card::MASTER:
-          setState(State::IDLE);
-          return;
+      }
+       if (millis() - stoper > CONTROL_TIMEOUT) {
+        setState(State::IDLE);
+        return;
       }
       return;
 
@@ -105,8 +110,9 @@ void loop() {
       return;
 
     case State::OPEN:
-      if (!isLockOpened()) {
+      if (isLockOpened()) {
         setState( State::WAITING_FOR_CLOSE);
+        stoper = millis();
       }
       return;
 
@@ -115,10 +121,11 @@ void loop() {
       return;
 
     case State::WAITING_FOR_CLOSE:
-      if (isLockOpened()) {
-        setState(State::OPEN);
-      } else {
+      if (!isLockOpened()) {
         setState(State::CLOSED);
+      }
+      if (millis() - stoper > WAITING_FOR_CLOSE_TIMEOUT) {
+        makeNoise(State::WAITING_FOR_CLOSE);
       }
       return;
 
