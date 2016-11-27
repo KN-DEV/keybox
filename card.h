@@ -32,7 +32,7 @@ const CardUID  RESET_CARD =  {9186, 13952};
 
 bool operator==(const CardUID& lhs, const CardUID& rhs);
 
-Card checkCard();
+Card checkCard(CardUID card);
 bool isMasterCard(CardUID card);
 
 bool isResetCard(CardUID card) ;
@@ -45,6 +45,6 @@ bool isCardScaned();
 
 bool readCard();
 
-void configureRFID();
+void setupRFID();
 
 #endif

@@ -1,9 +1,16 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define DOOR_PIN 10
+#define LOCK_PIN  30
+#define LOCK_DELAY 50
+#define LOCK_SENSOR_PIN 10
 
-#define RELAY_PIN  30
+#define KEY_HOLDER_PIN 15
+
+#define KEYBOX_STATUS_PIN 3
+
+
+
 
 #define BUZZER_PIN 2
 

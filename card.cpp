@@ -53,31 +53,30 @@ bool readCard() {
             return false;
         }
         return true;
-
     } else {
         return false;
     }
 }
 
-Card checkCard() {
-    if (isMasterCard(cardUID)) {
+Card checkCard(CardUID card) {
+    if (isMasterCard(card)) {
         return Card::MASTER;
     }
-    if (isResetCard(cardUID)) {
+    if (isResetCard(card)) {
         return Card::RESET;
     }
-    if (isLockCard(cardUID)) {
+    if (isLockCard(card)) {
         return Card::LOCK;
     }
-    if (findCardInAuthorizedCards(cardUID)) {
+    if (findCardInAuthorizedCards(card)) {
         return Card::AUTHORIZED;
     } else {
-        noise();
+        makeNoise((int) Noise::ACCESS_GRANTED);
         return Card::UNKNOWN;
     }
 };
 
-void configureRFID() {
+void setupRFID() {
     SPI.begin();
     mfrc522.PCD_Init();
 }

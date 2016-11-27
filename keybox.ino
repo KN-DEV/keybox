@@ -1,43 +1,30 @@
-
 #include "Arduino.h"
 #include "state.h"
 #include "pitches.h"
 #include "card.h"
-
 #include "database.h"
-#include "door.h"
+#include "lock.h"
 #include "noise.h"
+#include "keyholder.h"
 #include "config.h"
-
-
-
-
-
-// 
-//
-// https://www.arduino.cc/en/Tutorial/ToneMelody?from=Tutorial.Tone
-
-
-
-
 void setup() {
-  setUpDoor();
-
-  lcd.init();
-  lcd.backlight();
-  setState(State::IDLE);
-  configureRFID();
-  configureDatabase();
+  setupKeyHolder();
+  setupLockSensor();
+  setupLock();
+  setupState();
+  setupRFID();
+  setupDatabase();
 };
 
-
 void loop() {
+  updateKeyBoxStatus();
+  
   switch (getState()) {
     case State::IDLE:
       if (!isCardScaned()) {
         return;
       }
-      switch (checkCard()) {
+      switch (checkCard(cardUID)) {
         case Card::MASTER:
           setState(State::CONTROL);
           return;
@@ -59,7 +46,7 @@ void loop() {
         return;
       }
 
-      switch (checkCard()) {
+      switch (checkCard(cardUID)) {
         case Card::RESET:
           setState(State::RESET);
           return;
@@ -95,7 +82,7 @@ void loop() {
       if (!isCardScaned()) {
         return;
       }
-      switch (checkCard()) {
+      switch (checkCard(cardUID)) {
         case Card::MASTER:
           setState(State::IDLE);
           return;
@@ -105,12 +92,12 @@ void loop() {
       return;
 
     case State::OPENING:
-      unlockDoor();
+      unlockLock();
       setState(State::WAITING_FOR_OPEN);
       return;
 
     case State::WAITING_FOR_OPEN:
-      if (doorStatus()) {
+      if (isLockOpened()) {
         setState(State::OPEN);
       } else {
         setState(State::ERROR);
@@ -118,7 +105,7 @@ void loop() {
       return;
 
     case State::OPEN:
-      if (!doorStatus()) {
+      if (!isLockOpened()) {
         setState( State::WAITING_FOR_CLOSE);
       }
       return;
@@ -128,7 +115,7 @@ void loop() {
       return;
 
     case State::WAITING_FOR_CLOSE:
-      if (doorStatus()) {
+      if (isLockOpened()) {
         setState(State::OPEN);
       } else {
         setState(State::CLOSED);

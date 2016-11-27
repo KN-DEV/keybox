@@ -4,7 +4,11 @@
 #include "config.h"
 #include "pitches.h"
 
-void noise();
-extern int melody[];
-extern int noteDurations[];
+enum class Noise {
+  ACCESS_GRANTED,
+  ACCESS_DENIED 
+};
+void makeNoise(int type);
+extern int melody[1][8];
+extern int noteDurations[1][8];
 #endif
