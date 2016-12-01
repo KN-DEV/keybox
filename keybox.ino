@@ -16,13 +16,14 @@ void setup() {
   setupDatabase();
 };
 
-#define CONTROL_TIMEOUT 5000
-#define WAITING_FOR_CLOSE_TIMEOUT 10000
-unsigned long long  stoper = 0;
+
+
+unsigned long long previousMillis=0;
+unsigned long long currentMillis = 0;
 void loop() {
-
+  currentMillis = millis();
   updateKeyBoxStatus();
-
+  
   switch (getState()) {
     case State::IDLE:
       if (!isCardScaned()) {
@@ -31,7 +32,7 @@ void loop() {
       switch (checkCard(cardUID)) {
         case Card::MASTER:
           setState(State::CONTROL);
-          stoper = millis();
+          previousMillis = currentMillis;
           return;
         case Card::AUTHORIZED:
           setState(State::OPENING);
@@ -47,6 +48,11 @@ void loop() {
       return;
 
     case State::CONTROL:
+      if ((unsigned long long) (currentMillis - previousMillis) >= CONTROL_TIMEOUT) {
+        setState(State::IDLE);
+        previousMillis = currentMillis;
+        return;
+      }
       if (!isCardScaned()) {
         return;
       }
@@ -60,10 +66,6 @@ void loop() {
         case Card::UNKNOWN:
           setState(State::ADD_CARD);
           return;
-      }
-       if (millis() - stoper > CONTROL_TIMEOUT) {
-        setState(State::IDLE);
-        return;
       }
       return;
 
@@ -112,7 +114,7 @@ void loop() {
     case State::OPEN:
       if (isLockOpened()) {
         setState( State::WAITING_FOR_CLOSE);
-        stoper = millis();
+        previousMillis = currentMillis;
       }
       return;
 
@@ -124,8 +126,9 @@ void loop() {
       if (!isLockOpened()) {
         setState(State::CLOSED);
       }
-      if (millis() - stoper > WAITING_FOR_CLOSE_TIMEOUT) {
+      if ((unsigned long long) (currentMillis - previousMillis) >= WAITING_FOR_CLOSE_TIMEOUT) {
         makeNoise(State::WAITING_FOR_CLOSE);
+        previousMillis = currentMillis;
       }
       return;
 

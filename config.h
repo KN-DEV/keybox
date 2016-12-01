@@ -1,8 +1,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define LOCK_PIN  30
 #define LOCK_DELAY 50
+
+#define LOCK_PIN  30
 #define LOCK_SENSOR_PIN 10
 
 #define KEY_HOLDER_PIN 15
@@ -11,6 +12,8 @@
 
 
 
+#define CONTROL_TIMEOUT 5000
+#define WAITING_FOR_CLOSE_TIMEOUT 10000
 
 #define BUZZER_PIN 2
 
