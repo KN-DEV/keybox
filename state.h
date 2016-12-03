@@ -1,22 +1,11 @@
-#ifndef STATE_H
-#define STATE_H
+#pragma once
+#include "Arduino.h"
 #include "config.h"
+#include "melody.h"
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-enum class State {
-  IDLE,
-  OPENING,
-  WAITING_FOR_OPEN,
-  ERROR,
-  OPEN,
-  WAITING_FOR_CLOSE,
-  CLOSED,
-  CONTROL,
-  REJECT,
-  ADD_CARD,
-  RESET,
-  LOCKED
-};
+
+
 static const char* StateLabel[] = {
   "IDLE",
   "OPENING",
@@ -37,4 +26,4 @@ void setupState();
 State getState();
 void setState(State s);
 const char * getTextForEnum( int enumVal );
-#endif
+

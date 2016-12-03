@@ -1,17 +1,13 @@
-#ifndef NOISE_H
-#define NOISE_H
+#pragma once
 #include "Arduino.h"
 #include "config.h"
 #include "pitches.h"
-#include "state.h"
+#include "nonBlockingDelay.h"
 
-void playMelody(int* tones, int* durations);
-void makeNoise(State type);
-extern int melody[];
-extern int noteDurations[];
+void playTones(int* tones, int* durations);
 
 
 extern int WAITING_FOR_CLOSE_MELODY[]; 
 
 extern int WAITING_FOR_CLOSE_NOTE_DURATION[]; 
-#endif
+

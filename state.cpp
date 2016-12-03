@@ -14,6 +14,7 @@ void setState(State s) {
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print(getTextForEnum((int) getState()));
+  playMelody(getState());
 };
 const char * getTextForEnum( int enumVal ) {
   return StateLabel[enumVal];

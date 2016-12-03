@@ -4,7 +4,7 @@
 #include "card.h"
 #include "database.h"
 #include "lock.h"
-#include "noise.h"
+#include "melody.h"
 #include "keyholder.h"
 #include "config.h"
 void setup() {
@@ -16,14 +16,19 @@ void setup() {
   setupDatabase();
 };
 
+unsigned long previousMillis = 0;
+unsigned long currentMillis = 0;
 
 
-unsigned long long previousMillis=0;
-unsigned long long currentMillis = 0;
+void setTimeForTimeout() {
+  previousMillis = millis();
+}
+bool checkIfTimeout(unsigned long timeout) {
+  return abs(millis() - previousMillis) >= timeout;
+}
 void loop() {
-  currentMillis = millis();
   updateKeyBoxStatus();
-  
+
   switch (getState()) {
     case State::IDLE:
       if (!isCardScaned()) {
@@ -32,7 +37,7 @@ void loop() {
       switch (checkCard(cardUID)) {
         case Card::MASTER:
           setState(State::CONTROL);
-          previousMillis = currentMillis;
+          setTimeForTimeout();
           return;
         case Card::AUTHORIZED:
           setState(State::OPENING);
@@ -48,9 +53,9 @@ void loop() {
       return;
 
     case State::CONTROL:
-      if ((unsigned long long) (currentMillis - previousMillis) >= CONTROL_TIMEOUT) {
+      if (checkIfTimeout(CONTROL_TIMEOUT)) {
+        playMelody(State::WAITING_FOR_CLOSE);
         setState(State::IDLE);
-        previousMillis = currentMillis;
         return;
       }
       if (!isCardScaned()) {
@@ -85,6 +90,9 @@ void loop() {
       }
       return;
 
+    /**
+         Jeśli w pobliżu jest karta sprawdzamy czy to karta MASTER jeśli tak przechodzimy w stan IDLE
+    */
     case State::LOCKED:
       if (!isCardScaned()) {
         return;
@@ -93,16 +101,18 @@ void loop() {
         case Card::MASTER:
           setState(State::IDLE);
           return;
-        default:
-          return;
       }
       return;
-
+    /**
+        Otwieramy zamek jeśli mija LOCK_DELAY zamykamy zamek i przechodzimy w stan WAITING_FOR_OPEN
+    */
     case State::OPENING:
       unlockLock();
       setState(State::WAITING_FOR_OPEN);
       return;
-
+    /**
+         Sprawdza czy zamek jest otwarty jeśli tak przechodzimy w stan OPEN jeśli nie przechodzimy w stan ERROR
+    */
     case State::WAITING_FOR_OPEN:
       if (isLockOpened()) {
         setState(State::OPEN);
@@ -110,31 +120,42 @@ void loop() {
         setState(State::ERROR);
       }
       return;
-
+    /**
+         Sprawdza czy zamek jest otwarty i przechodzi w stan WAITING_FOR_CLOSE oraz aktualizuje czas dla timeout
+    */
     case State::OPEN:
       if (isLockOpened()) {
         setState( State::WAITING_FOR_CLOSE);
-        previousMillis = currentMillis;
+        setTimeForTimeout();
       }
       return;
-
+    /**
+         Ze stanu ERROR przechodzimy w stan IDLE
+    */
     case State::ERROR:
       setState(State::IDLE);
       return;
-
+    /**
+        Sprawdza czy zamek jest nie otwarty i przechodzimy w stan  CLOSED
+         Sprawdza czy mineło WAITING_FOR_CLOSE_TIMEOUT i odgrywa dzwięk
+    */
     case State::WAITING_FOR_CLOSE:
       if (!isLockOpened()) {
         setState(State::CLOSED);
+        return;
       }
-      if ((unsigned long long) (currentMillis - previousMillis) >= WAITING_FOR_CLOSE_TIMEOUT) {
-        makeNoise(State::WAITING_FOR_CLOSE);
-        previousMillis = currentMillis;
+      if (checkIfTimeout( WAITING_FOR_CLOSE_TIMEOUT)) {
+        playMelody(State::WAITING_FOR_CLOSE);
       }
       return;
 
+    /**
+        Ze stanu CLOSED przechodzimy w stan IDLE
+    */
     case State::CLOSED:
       setState(State::IDLE);
       return;
   }
 }
+
 

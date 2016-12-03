@@ -1,7 +1,5 @@
-#ifndef CARD_H
-#define CARD_H
+#pragma once
 #include "Arduino.h"
-
 #include "config.h"
 #include <SPI.h>
 #include <MFRC522.h>
@@ -47,4 +45,4 @@ bool readCard();
 
 void setupRFID();
 
-#endif
+

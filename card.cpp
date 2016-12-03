@@ -1,6 +1,5 @@
 #include "card.h"
 #include "database.h"
-#include "noise.h"
 
 MFRC522 mfrc522(RFID_RC522_SDA_PIN, RFID_RC522_RST_PIN);
 CardUID cardUID;
@@ -71,7 +70,6 @@ Card checkCard(CardUID card) {
     if (findCardInAuthorizedCards(card)) {
         return Card::AUTHORIZED;
     } else {
-        makeNoise(State::ERROR);
         return Card::UNKNOWN;
     }
 };

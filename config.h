@@ -1,8 +1,7 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
 
 #define LOCK_DELAY 50
-
+#define BETWEEN_STATE_DELAY 1000
 #define LOCK_PIN  30
 #define LOCK_SENSOR_PIN 10
 
@@ -25,4 +24,17 @@
 #define LCD_CELS 16
 #define LCD_ROWS 2
 
-#endif
+enum class State {
+  IDLE,
+  OPENING,
+  WAITING_FOR_OPEN,
+  ERROR,
+  OPEN,
+  WAITING_FOR_CLOSE,
+  CLOSED,
+  CONTROL,
+  REJECT,
+  ADD_CARD,
+  RESET,
+  LOCKED
+};

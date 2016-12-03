@@ -1,5 +1,4 @@
-#ifndef DATABASE_H
-#define DATABASE_H
+#pragma once
 #include "Arduino.h"
 #include "config.h"
 #include "card.h"
@@ -13,4 +12,4 @@ bool truncateDatabase();
 bool findCardInAuthorizedCards(CardUID card);
 void printError(EDB_Status err);
 bool addCardToAuthorizedList(CardUID card);
-#endif
+

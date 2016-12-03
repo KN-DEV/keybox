@@ -5,9 +5,10 @@ bool isLockOpened() {
 };
 void unlockLock() {
     digitalWrite(LOCK_PIN, LOW);
-    delay(LOCK_DELAY);
-    digitalWrite(LOCK_PIN, HIGH);
+    noBlockingDealy(LOCK_DELAY);
+   digitalWrite(LOCK_PIN, HIGH);
 };
+
 void setupLock() {
     pinMode(LOCK_PIN, OUTPUT);
     digitalWrite(LOCK_PIN, HIGH);
