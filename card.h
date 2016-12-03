@@ -1,19 +1,15 @@
 #pragma once
+
 #include "Arduino.h"
 #include "config.h"
+
 #include <SPI.h>
 #include <MFRC522.h>
 
 
 
 
-enum class Card {
-    MASTER,
-    UNKNOWN,
-    AUTHORIZED,
-    RESET,
-    LOCK
-};
+
 
 struct CardUID {
     uint32_t first;

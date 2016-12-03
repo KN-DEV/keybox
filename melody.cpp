@@ -39,6 +39,7 @@ void playMelody(State type) {
       playTones(melody, noteDurations);
       return;
     case State::OPENING:
+          playTones(melody, noteDurations);
       return;
     case State::WAITING_FOR_OPEN:
       return;

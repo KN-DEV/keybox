@@ -17,13 +17,12 @@ void setup() {
 };
 
 unsigned long previousMillis = 0;
-unsigned long currentMillis = 0;
 
 
 void setTimeForTimeout() {
   previousMillis = millis();
 }
-bool checkIfTimeout(unsigned long timeout) {
+bool checkTimeout(unsigned long timeout) {
   return abs(millis() - previousMillis) >= timeout;
 }
 void loop() {
@@ -53,7 +52,7 @@ void loop() {
       return;
 
     case State::CONTROL:
-      if (checkIfTimeout(CONTROL_TIMEOUT)) {
+      if (checkTimeout(CONTROL_TIMEOUT)) {
         playMelody(State::WAITING_FOR_CLOSE);
         setState(State::IDLE);
         return;
@@ -144,7 +143,7 @@ void loop() {
         setState(State::CLOSED);
         return;
       }
-      if (checkIfTimeout( WAITING_FOR_CLOSE_TIMEOUT)) {
+      if (checkTimeout( WAITING_FOR_CLOSE_TIMEOUT)) {
         playMelody(State::WAITING_FOR_CLOSE);
       }
       return;

@@ -38,3 +38,11 @@ enum class State {
   RESET,
   LOCKED
 };
+
+enum class Card {
+    MASTER,
+    UNKNOWN,
+    AUTHORIZED,
+    RESET,
+    LOCK
+};
