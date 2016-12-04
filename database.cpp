@@ -1,4 +1,6 @@
 #include "database.h"
+#include "config.h"
+#include <EEPROM.h>
 #include "card.h"
 EDB db(&writer, &reader);
 void writer(unsigned long address, byte data) {
@@ -16,7 +18,6 @@ bool truncateDatabase() {
   db.clear();
   return true;
 }
-
 bool findCardInAuthorizedCards(CardUID card) {
   CardUID selectedCardFromDB;
   for (int recno = 1; recno <= db.count(); recno++)
@@ -33,12 +34,8 @@ bool findCardInAuthorizedCards(CardUID card) {
     }
   }
   return false;
-
 };
-
-
-void printError(EDB_Status error)
-{
+void printError(EDB_Status error){
   switch (error)  {
     case EDB_OUT_OF_RANGE:
       break;
@@ -49,7 +46,6 @@ void printError(EDB_Status error)
       break;
   }
 }
-
 bool addCardToAuthorizedList(CardUID card) {
   EDB_Status result = db.appendRec( EDB_REC card);
   if (result != EDB_OK) {

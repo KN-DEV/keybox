@@ -1,24 +1,17 @@
-#include "noise.h"//// notes in the melody:
-
-
-
+#include "noise.h"
+#include "nonBlockingDelay.h"
 float getPauseBetweenNotes(int duration) {
   return  duration * 1.30;
 }
-
 void playTone(int note, int duration) {
   duration = 1000 / duration;
   tone(BUZZER_PIN, note, duration);
-  noBlockingDealy(getPauseBetweenNotes(duration));
+  nonBlockingDealy(getPauseBetweenNotes(duration));
   noTone(BUZZER_PIN);
 }
-
-
-void playTones(int* tones, int* durations) {
-  for (int thisNote = 0; thisNote < sizeof(tones) / sizeof(int); thisNote++) {
-    playTone( tones[thisNote], durations[thisNote]);
+void playTones(Note* tones, int* durations, int length) {
+  for (int thisNote = 0; thisNote < length; thisNote++) {
+    playTone( (int) tones[thisNote], durations[thisNote]);
   }
+  noTone(BUZZER_PIN);
 }
-
-
-

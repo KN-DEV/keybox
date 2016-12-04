@@ -1,29 +1,23 @@
 #include "card.h"
 #include "database.h"
-
+#include "config.h"
 MFRC522 mfrc522(RFID_RC522_SDA_PIN, RFID_RC522_RST_PIN);
 CardUID cardUID;
-
 bool operator==(const CardUID& lhs, const CardUID& rhs) {
     return lhs.first == rhs.first && lhs.second == rhs.second;
 };
-
 bool isMasterCard(CardUID card) {
     return card == MASTER_CARD;
 };
-
 bool isResetCard(CardUID card) {
     return card == RESET_CARD;
 }
-
 bool isLockCard(CardUID card) {
     return card == LOCK_CARD;
 }
-
 bool isThereAnyCardNearReader() {
     return mfrc522.PICC_IsNewCardPresent();
 }
-
 bool isCardScaned() {
     return isThereAnyCardNearReader() && readCard();
 };
@@ -47,7 +41,6 @@ bool readCard() {
                             (uint32_t) (mfrc522.uid.uidByte[5] << 8) |
                             (uint32_t) mfrc522.uid.uidByte[6];
             break;
-
         default:
             return false;
         }
@@ -56,7 +49,6 @@ bool readCard() {
         return false;
     }
 }
-
 Card checkCard(CardUID card) {
     if (isMasterCard(card)) {
         return Card::MASTER;
@@ -73,9 +65,7 @@ Card checkCard(CardUID card) {
         return Card::UNKNOWN;
     }
 };
-
 void setupRFID() {
     SPI.begin();
     mfrc522.PCD_Init();
 }
-

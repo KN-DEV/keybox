@@ -1,11 +1,11 @@
 #include "Arduino.h"
 #include "state.h"
-#include "pitches.h"
 #include "card.h"
 #include "database.h"
 #include "lock.h"
 #include "melody.h"
 #include "keyholder.h"
+#include "nonBlockingDelay.h"
 #include "config.h"
 void setup() {
   setupKeyHolder();
@@ -17,14 +17,13 @@ void setup() {
 };
 
 unsigned long previousMillis = 0;
-
-
 void setTimeForTimeout() {
   previousMillis = millis();
 }
 bool checkTimeout(unsigned long timeout) {
   return abs(millis() - previousMillis) >= timeout;
 }
+
 void loop() {
   updateKeyBoxStatus();
 
@@ -53,7 +52,7 @@ void loop() {
 
     case State::CONTROL:
       if (checkTimeout(CONTROL_TIMEOUT)) {
-        playMelody(State::WAITING_FOR_CLOSE);
+        playMelody(State::CONTROL);
         setState(State::IDLE);
         return;
       }
@@ -88,7 +87,6 @@ void loop() {
         setState(State::ERROR);
       }
       return;
-
     /**
          Jeśli w pobliżu jest karta sprawdzamy czy to karta MASTER jeśli tak przechodzimy w stan IDLE
     */
@@ -108,11 +106,15 @@ void loop() {
     case State::OPENING:
       unlockLock();
       setState(State::WAITING_FOR_OPEN);
+      setTimeForTimeout();
       return;
     /**
          Sprawdza czy zamek jest otwarty jeśli tak przechodzimy w stan OPEN jeśli nie przechodzimy w stan ERROR
     */
     case State::WAITING_FOR_OPEN:
+      if (!checkTimeout(500)) {
+        return;
+      }
       if (isLockOpened()) {
         setState(State::OPEN);
       } else {
@@ -123,15 +125,16 @@ void loop() {
          Sprawdza czy zamek jest otwarty i przechodzi w stan WAITING_FOR_CLOSE oraz aktualizuje czas dla timeout
     */
     case State::OPEN:
-      if (isLockOpened()) {
-        setState( State::WAITING_FOR_CLOSE);
-        setTimeForTimeout();
-      }
+      playMelody(State::OPEN);
+      setState( State::WAITING_FOR_CLOSE);
+      setTimeForTimeout();
       return;
     /**
          Ze stanu ERROR przechodzimy w stan IDLE
     */
     case State::ERROR:
+      playMelody(State::ERROR);
+      nonBlockingDealy(2000);
       setState(State::IDLE);
       return;
     /**
@@ -147,14 +150,13 @@ void loop() {
         playMelody(State::WAITING_FOR_CLOSE);
       }
       return;
-
     /**
         Ze stanu CLOSED przechodzimy w stan IDLE
     */
     case State::CLOSED:
+      playMelody(State::CLOSED);
+      nonBlockingDealy(1500);
       setState(State::IDLE);
       return;
   }
 }
-
-
