@@ -29,6 +29,10 @@ void loop() {
 
   switch (getState()) {
     case State::IDLE:
+      if(isLockOpened()) {
+        setState(State::ERROR);
+        return;
+      }
       if (!isCardScaned()) {
         return;
       }
@@ -47,6 +51,7 @@ void loop() {
       return;
 
     case State::REJECT:
+      playMelody(State::REJECT);
       setState(State::IDLE);
       return;
 

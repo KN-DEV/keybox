@@ -3,6 +3,8 @@
 #include "noise.h"
 Note ERROR_MELODY[] = {Note::_C3};
 int ERROR_DURATION[] = {1}; 
+Note REJECT_MELODY[] = {Note::_C1,Note::_C6};
+int REJECT_DURATION[] ={1,1};
 Note WAITING_FOR_CLOSE_MELODY[] = {Note::_B0,Note::_DS8};
 int WAITING_FOR_CLOSE_NOTE_DURATION[] = {4,4};
 Note OPEN_MELODY[] = {Note::_C6};
@@ -29,9 +31,10 @@ void playMelody(State type) {
       case State::CLOSED:
         playTones(CLOSED_MELODY, CLOSED_DURATION, 3);
         return;
-    //case State::REJECT:
-//        playTones(ERROR_MELODY, ERROR_DURATION);
-//        return;
+    case State::REJECT:
+        playTones(REJECT_MELODY, REJECT_DURATION,2);
+        return;
+        
 //      case State::OPENING:
 //        playTones(melody, noteDurations);
 //        return;
